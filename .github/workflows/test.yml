@@ -28,10 +28,28 @@ jobs:
           MPLBACKEND: Agg  # headless matplotlib
         run: |
           mkdir -p data
+          failed=0
           for nb in notebooks/*.ipynb; do
+            echo ""
+            echo "============================================"
             echo "=== Running: $nb ==="
-            jupyter nbconvert --to notebook --execute --ExecutePreprocessor.timeout=300 "$nb" --output "$(basename $nb)" --output-dir /tmp/test_output
-            echo "✅ $nb passed"
+            echo "============================================"
+            if jupyter nbconvert --to notebook --execute \
+                --ExecutePreprocessor.timeout=180 \
+                --ExecutePreprocessor.allow_errors=False \
+                "$nb" \
+                --output "$(basename $nb .ipynb)_executed.ipynb" \
+                --output-dir /tmp/test_output 2>&1; then
+              echo "✅ $nb PASSED"
+            else
+              echo "❌ $nb FAILED"
+              failed=1
+            fi
           done
           echo ""
-          echo "🎉 All 8 notebooks executed successfully!"
+          if [ $failed -eq 0 ]; then
+            echo "🎉 All notebooks executed successfully!"
+          else
+            echo "💥 Some notebooks failed. Check logs above."
+            exit 1
+          fi
