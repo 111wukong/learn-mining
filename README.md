@@ -1,86 +1,66 @@
 # ⛏️ Learn Mining — 从零理解加密货币挖矿
 
+> 一套 Jupyter Notebook 教程，从 SHA-256 讲到 51% 攻击，从区块结构讲到矿池协议。
 > 纯技术学习项目，不讲炒币，只讲原理。
 
-## 这是什么
+## 🎓 课程架构（8 课）
 
-一套 Python 教程 + 模拟代码，带你从 **哈希函数** 开始，一步步理解什么是挖矿、工作量证明、矿池的工作原理。
+| # | Notebook | 内容 |
+|---|----------|------|
+| 01 | `01_hash_crypto.ipynb` | SHA-256、RIPEMD-160、Base58Check、ECDSA、雪崩效应 |
+| 02 | `02_proof_of_work.ipynb` | nBits 编码、难度计算、Poisson 过程、Nonce 空间 |
+| 03 | `03_block_merkle.ipynb` | 80 字节区块头、Merkle Tree、Merkle Proof、链结构 |
+| 04 | `04_mining_sim.ipynb` | 完整矿工模拟器、亲手挖一个区块 |
+| 05 | `05_mining_pool.ipynb` | Stratum 协议、Share 机制、PPS/PPLNS 分红 |
+| 06 | `06_difficulty.ipynb` | 每 2016 块难度调整算法、±4x 限制、历史趋势 |
+| 07 | `07_economics_attacks.ipynb` | 盈亏模型、51% 攻击模拟、自私挖矿、MEV |
+| 08 | `08_real_data.ipynb` | 硬件进化史、算力分布、能源争议、比特币的未来 |
 
-**不碰真币，不伤电脑，纯教育用途。**
-
-## 学习路线
+### 学习路线
 
 ```
-哈希基础 → 工作量证明 → 区块链挖矿 → 矿池机制 → 难度调整
+密码学基础 → 工作量证明 → 区块结构 → 挖矿模拟
+      ↓
+  矿池协议 → 难度调整 → 经济学&攻击 → 真实数据
 ```
 
-### 1. `src/hash_demo.py`
-挖矿的数学基础 — SHA-256 哈希。理解什么是哈希碰撞、雪崩效应、前导零。
+## 🚀 快速开始
 
 ```bash
-python src/hash_demo.py
+git clone https://github.com/111wukong/learn-mining.git
+cd learn-mining
+pip install jupyter matplotlib numpy
+jupyter notebook
 ```
 
-### 2. `src/pow_miner.py`
-工作量证明（Proof of Work）的完整模拟。给定难度目标，不断尝试 nonce 直到找到符合条件的哈希。
+然后在浏览器中按顺序打开 `notebooks/01_hash_crypto.ipynb` 开始。
 
-```bash
-python src/pow_miner.py
-```
+## 🔧 技术栈
 
-### 3. `src/blockchain.py`
-一条完整的迷你区块链 + 挖矿。每个区块包含交易、前一区块哈希、nonce，挖出新区块获得奖励。
+- **Python 3** — 全部纯 Python，无外部区块链依赖
+- **Jupyter Notebook** — 交互式教学
+- **matplotlib + numpy** — 可视化和数据分析
 
-```bash
-python src/blockchain.py
-```
-
-### 4. `src/mining_pool.py`
-矿池模拟。多个矿工协作挖矿，按贡献分配奖励。理解 Stratum 协议和 PPLNS/PPS 分配机制。
-
-```bash
-python src/mining_pool.py
-```
-
-### 5. `src/difficulty_sim.py`
-难度调整机制模拟。观察算力变化时网络如何自动调整挖矿难度，维持平均出块时间。
-
-```bash
-python src/difficulty_sim.py
-```
-
-### 6. `notebooks/mining_basics.py`
-交互式教程脚本，从零展示挖矿全过程。
-
-```bash
-python notebooks/mining_basics.py
-```
-
-## 核心概念速览
+## 📖 核心概念速览
 
 | 概念 | 一句话 |
 |------|--------|
-| **哈希** | 把任意数据变成固定长度的指纹 |
-| **工作量证明** | 故意让人做大量计算，证明你付出了成本 |
-| **挖矿** | 暴力尝试 nonce 找前导零满足条件的哈希 |
-| **难度** | 前导零越多越难，全网算力越高难度越高 |
-| **矿池** | 矿工团结起来平滑收益 |
-| **区块奖励** | 挖到块白送的币，激励矿工参与 |
-| **交易费** | 区块里交易的手续费，矿工的另一收入 |
+| **哈希** | 任意数据 → 固定长度指纹，单向不可逆 |
+| **工作量证明** | 故意制造计算成本，证明付出 |
+| **挖矿** | 暴力试 nonce 找满足前导零的哈希 |
+| **难度** | 哈希小于某个值才算数，全网每 2016 块自动调整 |
+| **矿池** | 矿工抱团平滑收益 |
+| **Merkle Tree** | 用 O(log n) 空间证明交易在区块中 |
+| **51% 攻击** | 控制过半算力可双花，但 BTC 上经济不可行 |
 
-## 为什么个人电脑挖不了矿
+## ⚠️ 免责声明
 
-学完这个项目你自己就明白了：
+本项目仅用于**教育目的**。不构成投资建议，不建议也不鼓励加密货币交易或挖矿。
 
-1. 全网算力以 EH/s（百亿亿次/秒）计
-2. 你的 MacBook Air 算力约 100 H/s
-3. 概率相当于买彩票中头奖
+## 📚 推荐阅读
 
-## 环境要求
-
-- Python 3.8+
-- 无需额外依赖（纯标准库）
-
-## 免责声明
-
-本项目仅用于教育目的。不构成投资建议，不鼓励加密货币交易。
+- [Bitcoin Whitepaper](https://bitcoin.org/bitcoin.pdf) — 中本聪原文，只有 9 页
+- [Mastering Bitcoin](https://github.com/bitcoinbook/bitcoinbook) — O'Reilly 免费开源书
+- [3Blue1Brown - But how does bitcoin actually work?](https://youtu.be/bBC-nXj3Ng4)
+- [Mempool.space](https://mempool.space/) — 实时区块链浏览器
+- [Learn Me A Bitcoin](https://learnmeabitcoin.com/) — 交互式学习
