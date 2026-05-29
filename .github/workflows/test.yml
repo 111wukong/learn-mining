@@ -1,0 +1,37 @@
+name: Test Notebooks
+
+on:
+  push:
+    paths:
+      - 'notebooks/**.ipynb'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-notebooks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install jupyter nbconvert matplotlib numpy
+
+      - name: Execute notebooks
+        env:
+          MPLBACKEND: Agg  # headless matplotlib
+        run: |
+          mkdir -p data
+          for nb in notebooks/*.ipynb; do
+            echo "=== Running: $nb ==="
+            jupyter nbconvert --to notebook --execute --ExecutePreprocessor.timeout=300 "$nb" --output "$(basename $nb)" --output-dir /tmp/test_output
+            echo "✅ $nb passed"
+          done
+          echo ""
+          echo "🎉 All 8 notebooks executed successfully!"
